@@ -7,7 +7,6 @@ const logoutRouter = require("./routes/logout");
 const authorsRouter = require("./routes/authors");
 const readingListsRouter = require("./routes/readingLists");
 const { unknownEndpoint, errorHandler } = require("./utils/middleware");
-const { ensureConnection } = require("./utils/db");
 
 const app = express();
 
@@ -16,15 +15,6 @@ app.use(express.json());
 
 app.get("/", (request, response) => {
   response.json({ message: "Blog API is running" });
-});
-
-// Make sure MongoDB is connected before any /api route runs. Locally index.js
-// has already connected (this is then a no-op); on Vercel nothing else
-// connects, because index.js is never executed there.
-app.use("/api", async (request, response, next) => {
-  await ensureConnection();
-
-  next();
 });
 
 app.use("/api/blogs", blogsRouter);
